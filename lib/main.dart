@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habbit_tracker/kelasPage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -51,6 +52,20 @@ Future<void> addClass(String className) async {
     }
   } catch (e) {
     Fluttertoast.showToast(msg: "Terjadi kesalahan");
+  }
+}
+
+Future<bool> updateClassName(int id, String newName) async {
+  try {
+    await Supabase.instance.client
+        .from('kelas')
+        .update({'nama_kelas': newName}).eq('id', id);
+
+    Fluttertoast.showToast(msg: 'Kelas berhasil diperbarui');
+    return true;
+  } catch (e) {
+    Fluttertoast.showToast(msg: 'Terjadi kesalahan saat memperbarui kelas');
+    return false;
   }
 }
 
@@ -126,6 +141,72 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  Future<void> _showEditDialog(Map<String, dynamic> kelas) async {
+    final TextEditingController editController = TextEditingController(
+      text: kelas['nama_kelas'],
+    );
+
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Kelas'),
+          content: TextField(
+            controller: editController,
+            decoration: InputDecoration(
+              labelText: 'Nama Kelas',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _loadKelas();
+                });
+              },
+              child: Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (editController.text.isNotEmpty) {
+                  // Show loading indicator
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+
+                  // Update class name
+                  bool success =
+                      await updateClassName(kelas['id'], editController.text);
+
+                  // Close loading indicator
+                  Navigator.of(context).pop();
+
+                  if (success) {
+                    // Close edit dialog
+                    Navigator.of(context).pop();
+                    // Refresh list
+                    await _loadKelas();
+                  }
+                }
+              },
+              child: Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,36 +218,60 @@ class _HomePageState extends State<HomePage>
           Column(
             children: [
               Expanded(
-                  child: ListView.builder(
-                itemCount: _kelaslist.length,
-                itemBuilder: (context, index) {
-                  var kelas = _kelaslist[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.black54, width: 0.5),
+                child: ListView.builder(
+                  itemCount: _kelaslist.length,
+                  itemBuilder: (context, index) {
+                    var kelas = _kelaslist[index];
+                    return Dismissible(
+                      key: Key(kelas['id'].toString()),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.blue,
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Icon(Icons.edit, color: Colors.white),
                       ),
-                    ),
-                    child: ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                      title: Text(
-                        kelas['nama_kelas'] ?? 'Nama Kelas Tidak Tersedia',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                      confirmDismiss: (direction) async {
+                        await _showEditDialog(kelas);
+                        return false; // Keep item in list
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => KelasPage(kelasId: kelas),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom:
+                                  BorderSide(color: Colors.black54, width: 0.5),
+                            ),
+                          ),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 8),
+                            title: Text(
+                              kelas['nama_kelas'] ??
+                                  'Nama Kelas Tidak Tersedia',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      minLeadingWidth: 10,
-                      minVerticalPadding: 20,
-                    ),
-                  );
-                },
-              ))
+                    );
+                  },
+                ),
+              )
             ],
           ),
-          // bagian textfield
           if (_isTextFieldVisible && _animation != null)
             FadeTransition(
               opacity: _animation!,
@@ -186,9 +291,7 @@ class _HomePageState extends State<HomePage>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(
-                              height: 24,
-                            ),
+                            SizedBox(height: 24),
                             TextField(
                               controller: _classnamecontroler,
                               autofocus: true,
@@ -218,7 +321,8 @@ class _HomePageState extends State<HomePage>
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue),
+                                    backgroundColor: Colors.blue,
+                                  ),
                                 ),
                               ],
                             ),
