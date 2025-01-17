@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habbit_tracker/kelasPage.dart';
+import 'package:Classroom/pages/kelasPage.dart';
+import 'services/serviceKelas.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,60 +31,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-Future<void> addClass(String className) async {
-  final supabaseClient = Supabase.instance.client;
-
-  try {
-    final response = await supabaseClient
-        .from('kelas')
-        .insert([
-          {
-            'nama_kelas': className,
-            'created_at': DateTime.now().toIso8601String()
-          }
-        ])
-        .select()
-        .single();
-    if (response != null) {
-      Fluttertoast.showToast(msg: 'Kelas berhasil ditambah');
-    } else {
-      Fluttertoast.showToast(msg: "Kelas gagal ditambah");
-    }
-  } catch (e) {
-    Fluttertoast.showToast(msg: "Terjadi kesalahan");
-  }
-}
-
-Future<bool> updateClassName(int id, String newName) async {
-  try {
-    await Supabase.instance.client
-        .from('kelas')
-        .update({'nama_kelas': newName}).eq('id', id);
-
-    Fluttertoast.showToast(msg: 'Kelas berhasil diperbarui');
-    return true;
-  } catch (e) {
-    Fluttertoast.showToast(msg: 'Terjadi kesalahan saat memperbarui kelas');
-    return false;
-  }
-}
-
-Future<List<dynamic>> fetchClasses() async {
-  final supabaseClient = Supabase.instance.client;
-
-  try {
-    final response = await supabaseClient
-        .from('kelas')
-        .select()
-        .order('created_at', ascending: false);
-
-    return response as List<dynamic>;
-  } catch (e) {
-    Fluttertoast.showToast(msg: "Gagal memuat data kelas");
-    return [];
-  }
-}
-
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _classnamecontroler = TextEditingController();
@@ -108,7 +54,8 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> _loadKelas() async {
-    List<dynamic> kelasData = await fetchClasses();
+    List<dynamic> kelasData =
+        await Servicekelas.fetchClasses(); // Gunakan service
     setState(() {
       _kelaslist = kelasData;
     });
@@ -134,7 +81,7 @@ class _HomePageState extends State<HomePage>
 
   void _handleSubmit() {
     if (_classnamecontroler.text.isNotEmpty) {
-      addClass(_classnamecontroler.text);
+      Servicekelas.addClass(_classnamecontroler.text); // Gunakan service
       _classnamecontroler.clear();
       _toggleDialog();
       _loadKelas();
@@ -185,8 +132,8 @@ class _HomePageState extends State<HomePage>
                   );
 
                   // Update class name
-                  bool success =
-                      await updateClassName(kelas['id'], editController.text);
+                  bool success = await Servicekelas.updateClassName(
+                      kelas['id'], editController.text); // Gunakan service
 
                   // Close loading indicator
                   Navigator.of(context).pop();
@@ -237,10 +184,12 @@ class _HomePageState extends State<HomePage>
                       },
                       child: GestureDetector(
                         onTap: () {
+                          final kelasId =
+                              int.tryParse(kelas['id'].toString()) ?? 0;
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => KelasPage(kelasId: kelas),
+                              builder: (context) => KelasPage(kelasId: kelasId),
                             ),
                           );
                         },
