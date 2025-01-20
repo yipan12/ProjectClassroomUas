@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/serviceKelas.dart';
+import 'package:provider/provider.dart';
+import '../providers/kelasProvider.dart';
 
 class KelasPage extends StatefulWidget {
   final int kelasId;
@@ -11,20 +12,12 @@ class KelasPage extends StatefulWidget {
 }
 
 class _KelasPageState extends State<KelasPage> {
-  late Future<Map<String, dynamic>> kelasDetails;
-  // Change the state declaration to be mutable
-  Map<int, Set<int>> selectedValues = <int, Set<int>>{};
-
   @override
   void initState() {
     super.initState();
-    kelasDetails = Servicekelas().tampilsiswafetch(widget.kelasId);
-  }
-
-  void _initializeStudentSet(int studentId) {
-    if (!selectedValues.containsKey(studentId)) {
-      selectedValues[studentId] = <int>{};
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<KelasProvider>().loadKelasDetails(widget.kelasId);
+    });
   }
 
   @override
@@ -35,19 +28,18 @@ class _KelasPageState extends State<KelasPage> {
         elevation: 0,
         backgroundColor: Colors.blue.shade800,
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: kelasDetails,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: Consumer<KelasProvider>(
+        builder: (context, kelasProvider, child) {
+          if (kelasProvider.isLoading) {
             return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Data kelas tidak ditemukan'));
           }
 
-          final kelas = snapshot.data!;
-          final siswaList = kelas['siswa'] as List<dynamic>?;
+          final kelasDetails = kelasProvider.selectedKelasDetails;
+          if (kelasDetails == null) {
+            return Center(child: Text('Data tidak ditemukan'));
+          }
+
+          final siswaList = kelasDetails['siswa'] as List<dynamic>?;
 
           return Column(
             children: [
@@ -56,7 +48,7 @@ class _KelasPageState extends State<KelasPage> {
                 padding: EdgeInsets.all(16),
                 color: Colors.blue.shade800,
                 child: Text(
-                  'Kelas: ${kelas['nama_kelas']}',
+                  'Kelas: ${kelasDetails['nama_kelas']}',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -71,7 +63,7 @@ class _KelasPageState extends State<KelasPage> {
                     scrollDirection: Axis.vertical,
                     child: DataTable(
                       headingRowColor:
-                          MaterialStateProperty.all(Colors.grey.shade200),
+                          WidgetStateProperty.all(Colors.grey.shade200),
                       border: TableBorder.all(
                         color: Colors.grey.shade300,
                         width: 1,
@@ -102,8 +94,6 @@ class _KelasPageState extends State<KelasPage> {
                       ],
                       rows: siswaList?.map<DataRow>((siswa) {
                             final studentId = siswa['id'] as int;
-                            _initializeStudentSet(studentId);
-
                             return DataRow(
                               cells: [
                                 DataCell(
@@ -123,19 +113,15 @@ class _KelasPageState extends State<KelasPage> {
                                       width: 25,
                                       alignment: Alignment.center,
                                       child: Checkbox(
-                                        value: selectedValues[studentId]
+                                        value: kelasProvider
+                                                .selectedValues[studentId]
                                                 ?.contains(columnIndex) ??
                                             false,
                                         onChanged: (bool? checked) {
-                                          setState(() {
-                                            if (checked == true) {
-                                              selectedValues[studentId]!
-                                                  .add(columnIndex);
-                                            } else {
-                                              selectedValues[studentId]!
-                                                  .remove(columnIndex);
-                                            }
-                                          });
+                                          if (checked != null) {
+                                            kelasProvider.toggleAttendance(
+                                                studentId, columnIndex);
+                                          }
                                         },
                                       ),
                                     ),
