@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -57,6 +59,24 @@ class Servicekelas {
     } catch (e) {
       Fluttertoast.showToast(msg: "Gagal memuat data kelas");
       return [];
+    }
+  }
+
+  static Future<bool> updateClassSchedule(
+      int id, Map<String, String> schedule) async {
+    try {
+      String jsonSchedule = jsonEncode(schedule);
+
+      await Supabase.instance.client
+          .from('kelas')
+          .update({'jadwal': jsonSchedule}).eq('id', id);
+
+      Fluttertoast.showToast(msg: 'Jadwal berhasil diperbarui');
+      return true;
+    } catch (e) {
+      print('Error updating schedule: $e');
+      Fluttertoast.showToast(msg: 'Terjadi kesalahan saat memperbarui jadwal');
+      return false;
     }
   }
 

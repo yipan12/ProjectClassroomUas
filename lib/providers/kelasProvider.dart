@@ -58,6 +58,14 @@ class KelasProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateClassSchedule(int id, Map<String, String> schedule) async {
+    final success = await Servicekelas.updateClassSchedule(id, schedule);
+    if (success) {
+      await loadKelas();
+    }
+    return success;
+  }
+
   void _initializeSelectedValues() {
     if (_selectedKelasDetails != null &&
         _selectedKelasDetails!['siswa'] != null) {

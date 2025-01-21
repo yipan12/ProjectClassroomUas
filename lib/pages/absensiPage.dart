@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/kelasProvider.dart';
 
-class KelasPage extends StatefulWidget {
+class absensiPage extends StatefulWidget {
   final int kelasId;
 
-  KelasPage({required this.kelasId});
+  absensiPage({required this.kelasId});
 
   @override
-  _KelasPageState createState() => _KelasPageState();
+  _absensiPageState createState() => _absensiPageState();
 }
 
-class _KelasPageState extends State<KelasPage> {
+class _absensiPageState extends State<absensiPage> {
   @override
   void initState() {
     super.initState();

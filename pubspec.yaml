@@ -42,6 +42,7 @@ dependencies:
   fluttertoast: ^8.2.10
   mockito: ^5.4.5
   build_runner: ^2.4.14
+  salomon_bottom_bar: ^3.3.2
 
 dev_dependencies:
   flutter_test:
