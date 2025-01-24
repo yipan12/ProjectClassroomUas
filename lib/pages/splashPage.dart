@@ -20,8 +20,7 @@ class _SplashpageState extends State<Splashpage> {
       print('Navigation timer completed');
       Navigator.pushReplacementNamed(context, '/login')
           .then((_) => print('Navigated to login'))
-          .catchError(
-              (error) => print('Navigation error: $error')); // Error handling
+          .catchError((error) => print('Navigation error: $error'));
     });
   }
 

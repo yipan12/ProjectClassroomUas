@@ -1,9 +1,10 @@
 import 'package:Classroom/main.dart';
 import 'package:Classroom/pages/jadwalPage.dart';
+import 'package:Classroom/pages/listNilaiPage.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:Classroom/pages/jadwalPage.dart';
-import 'package:Classroom/pages/listKelasPage.dart';
+import 'package:Classroom/pages/listAbsenPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,10 +15,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   // Daftar halaman
-  final List<Widget> _pages = [
-    KelasListPage(),
-    jadwalPage(),
-  ];
+  final List<Widget> _pages = [listAbsenPage(), jadwalPage(), listNilaiPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +44,11 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.schedule),
               title: Text("Jadwal"),
               selectedColor: Colors.purple,
+            ),
+            SalomonBottomBarItem(
+              icon: Icon(Icons.line_axis),
+              title: Text("Nilai"),
+              selectedColor: const Color.fromARGB(255, 67, 187, 63),
             ),
           ],
         ),

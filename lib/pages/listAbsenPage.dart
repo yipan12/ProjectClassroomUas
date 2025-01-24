@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import '../providers/kelasProvider.dart';
 import 'absensiPage.dart';
 
-class KelasListPage extends StatefulWidget {
+class listAbsenPage extends StatefulWidget {
   @override
-  _KelasListPageState createState() => _KelasListPageState();
+  _listAbsenPageState createState() => _listAbsenPageState();
 }
 
-class _KelasListPageState extends State<KelasListPage>
+class _listAbsenPageState extends State<listAbsenPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _classnamecontroler = TextEditingController();
   AnimationController? _animationController;
@@ -93,6 +93,44 @@ class _KelasListPageState extends State<KelasListPage>
     );
   }
 
+  Future<void> _showDeleteConfirmation(dynamic kelas) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Hapus Kelas'),
+          content: Text(
+              'Anda yakin ingin menghapus kelas  ${kelas.namaKelas}?\nSemua data siswa dan nilai akan ikut terhapus.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await context.read<KelasProvider>().deleteClass(kelas.id);
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              child: Text(
+                'Hapus',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _handleSubmit() {
     if (_classnamecontroler.text.isNotEmpty) {
       context.read<KelasProvider>().addClass(_classnamecontroler.text);
@@ -119,15 +157,38 @@ class _KelasListPageState extends State<KelasListPage>
                   var kelas = kelasProvider.kelasList[index];
                   return Dismissible(
                     key: Key(kelas.id.toString()),
-                    direction: DismissDirection.endToStart,
+                    direction: DismissDirection.horizontal,
                     background: Container(
+                      color: Colors.red,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text('Hapus', style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    secondaryBackground: Container(
                       color: Colors.blue,
                       padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Icon(Icons.edit, color: Colors.white),
                       alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('Edit', style: TextStyle(color: Colors.white)),
+                          SizedBox(width: 8),
+                          Icon(Icons.edit, color: Colors.white),
+                        ],
+                      ),
                     ),
                     confirmDismiss: (direction) async {
-                      await _showEditDialog(kelas);
+                      if (direction == DismissDirection.endToStart) {
+                        await _showEditDialog(kelas);
+                      } else {
+                        await _showDeleteConfirmation(kelas);
+                      }
                       return false;
                     },
                     child: Container(

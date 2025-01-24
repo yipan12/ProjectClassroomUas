@@ -89,7 +89,6 @@ class _jadwalPageState extends State<jadwalPage> {
                             'waktu':
                                 '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
                           };
-                          // Hapus 'as String' karena method seharusnya menerima Map
                           context
                               .read<KelasProvider>()
                               .updateClassSchedule(kelas.id, schedule);
