@@ -122,7 +122,7 @@ class _NilaiDetailPageState extends State<NilaiDetailPage> {
       appBar: AppBar(
         title: Text('Detail Nilai'),
         elevation: 0,
-        backgroundColor: Colors.blue.shade800,
+        backgroundColor: Colors.blue,
       ),
       body: Consumer<KelasProvider>(
         builder: (context, kelasProvider, child) {
@@ -142,7 +142,7 @@ class _NilaiDetailPageState extends State<NilaiDetailPage> {
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(16),
-                color: Colors.blue.shade800,
+                color: Colors.blue,
                 child: Text(
                   'Kelas: ${kelasDetails['nama_kelas']}',
                   style: TextStyle(

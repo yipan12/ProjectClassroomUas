@@ -22,6 +22,7 @@ class _listNilaiPageState extends State<listNilaiPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Nilai'),
+        backgroundColor: Colors.blue,
         elevation: 0,
       ),
       body: Consumer<KelasProvider>(

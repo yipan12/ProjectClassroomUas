@@ -136,6 +136,7 @@ class _jadwalPageState extends State<jadwalPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Jadwal Kelas'),
+        backgroundColor: Colors.blue,
         elevation: 0,
       ),
       body: Consumer<KelasProvider>(

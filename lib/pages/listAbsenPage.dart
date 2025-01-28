@@ -142,7 +142,10 @@ class _listAbsenPageState extends State<listAbsenPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Absensi Kelas')),
+      appBar: AppBar(
+        title: Text('Absensi Kelas'),
+        backgroundColor: Colors.blue,
+      ),
       body: Consumer<KelasProvider>(
         builder: (context, kelasProvider, child) {
           if (kelasProvider.isLoading) {
