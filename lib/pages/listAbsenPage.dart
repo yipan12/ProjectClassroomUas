@@ -143,7 +143,10 @@ class _listAbsenPageState extends State<listAbsenPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Absensi Kelas'),
+        title: Text(
+          'Absensi Kelas',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
       ),
       body: Consumer<KelasProvider>(

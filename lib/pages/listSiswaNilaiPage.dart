@@ -120,9 +120,13 @@ class _NilaiDetailPageState extends State<NilaiDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Nilai'),
+        title: Text(
+          'Detail Nilai',
+          style: TextStyle(color: Colors.white),
+        ),
         elevation: 0,
         backgroundColor: Colors.blue,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Consumer<KelasProvider>(
         builder: (context, kelasProvider, child) {

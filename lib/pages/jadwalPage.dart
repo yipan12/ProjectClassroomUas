@@ -135,7 +135,10 @@ class _jadwalPageState extends State<jadwalPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Jadwal Kelas'),
+        title: Text(
+          'Jadwal Kelas',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
         elevation: 0,
       ),

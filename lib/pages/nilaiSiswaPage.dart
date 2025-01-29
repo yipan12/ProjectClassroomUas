@@ -117,7 +117,10 @@ class _NilaiSiswaPageState extends State<NilaiSiswaPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Batal'),
+                  child: Text(
+                    'Batal',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -131,7 +134,10 @@ class _NilaiSiswaPageState extends State<NilaiSiswaPage> {
                       Navigator.pop(context);
                     }
                   },
-                  child: Text('Simpan'),
+                  child: Text(
+                    'Simpan',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             );
@@ -219,9 +225,13 @@ class _NilaiSiswaPageState extends State<NilaiSiswaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nilai ${widget.namaSiswa}'),
+        title: Text(
+          'Nilai ',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
         elevation: 0,
         backgroundColor: Colors.blue.shade800,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Consumer<KelasProvider>(
         builder: (context, kelasProvider, child) {

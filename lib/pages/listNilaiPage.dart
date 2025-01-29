@@ -21,7 +21,10 @@ class _listNilaiPageState extends State<listNilaiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Nilai'),
+        title: Text(
+          'Daftar Nilai',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
         elevation: 0,
       ),

@@ -70,9 +70,13 @@ class _absensiPageState extends State<absensiPage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Detail Kelas'),
+          title: Text(
+            'Detail Kelas',
+            style: TextStyle(color: Colors.white),
+          ),
           elevation: 0,
           backgroundColor: Colors.blue,
+          iconTheme: IconThemeData(color: Colors.white),
         ),
         floatingActionButton: Consumer<KelasProvider>(
           builder: (context, provider, child) {

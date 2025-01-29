@@ -73,11 +73,26 @@ class KelasProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteClass(int kelasId) async {
+  Future deleteClass(int kelasId) async {
     _isLoading = true;
     notifyListeners();
 
     try {
+      final studentsResponse = await Supabase.instance.client
+          .from('siswa')
+          .select('id')
+          .eq('kelas_id', kelasId);
+
+      final studentIds =
+          (studentsResponse as List).map((student) => student['id']).toList();
+
+      if (studentIds.isNotEmpty) {
+        await Supabase.instance.client
+            .from('absensi')
+            .delete()
+            .filter('student_id', 'in', studentIds);
+      }
+
       await Supabase.instance.client
           .from('nilai')
           .delete()
