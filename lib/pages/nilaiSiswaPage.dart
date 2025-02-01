@@ -1,4 +1,4 @@
-import 'package:Classroom/models/kelas.dart';
+import 'package:Weclass/models/kelas.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/kelasProvider.dart';

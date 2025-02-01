@@ -1,12 +1,12 @@
-import 'package:Classroom/pages/homePage.dart';
-import 'package:Classroom/pages/loginPage.dart';
-import 'package:Classroom/pages/registerPage.dart';
+import 'package:Weclass/pages/botomBar.dart';
+import 'package:Weclass/pages/loginPage.dart';
+import 'package:Weclass/pages/registerPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:Classroom/providers/kelasProvider.dart';
-import 'package:Classroom/providers/authProvider.dart';
-import 'package:Classroom/pages/splashPage.dart';
+import 'package:Weclass/providers/kelasProvider.dart';
+import 'package:Weclass/providers/authProvider.dart';
+import 'package:Weclass/pages/splashPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Classroom App',
+        title: 'Weclass App',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

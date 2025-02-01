@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../providers/kelasProvider.dart';
 
 class absensiPage extends StatefulWidget {
@@ -28,13 +29,21 @@ class _absensiPageState extends State<absensiPage> {
       setState(() {
         _hasChanges = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Absensi berhasil disimpan')),
-      );
+      Fluttertoast.showToast(
+          msg: 'Absensi berhasil disimpan',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menyimpan absensi: $e')),
-      );
+      Fluttertoast.showToast(
+          msg: 'Gagal menyimpan absensi: $e',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

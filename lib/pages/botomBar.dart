@@ -1,8 +1,8 @@
-import 'package:Classroom/pages/jadwalPage.dart';
-import 'package:Classroom/pages/listNilaiPage.dart';
+import 'package:Weclass/pages/jadwalPage.dart';
+import 'package:Weclass/pages/listNilaiPage.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-import 'package:Classroom/pages/listAbsenPage.dart';
+import 'package:Weclass/pages/listAbsenPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
